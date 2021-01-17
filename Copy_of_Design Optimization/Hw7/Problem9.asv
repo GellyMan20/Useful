@@ -1,0 +1,21 @@
+%FEA Project
+%Alex Gellios
+clc; clear all; close all; 
+
+%% Problem 6
+syms r s;
+
+P = 1;
+E = 210e9;
+v = .2;
+
+h1 = (1/4)*(1+r)*(1+s);
+h2 = (1/4)*(1-r)*(1+s);
+h3 = (1/4)*(1-r)*(1-s);
+h4 = (1/4)*(1+r)*(1-s);
+
+E = [1/E -v/E 0; -v/E 1/E 0; 0 0 2*(1+v)/E];
+
+B = [h1 0 h2 0 h3 0 h4 0;...
+     ]
+
