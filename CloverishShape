@@ -1,0 +1,32 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Thu Nov 26 18:47:53 2020
+
+@author: Alex
+"""
+#import turtle (drawing mechanism)
+import turtle
+from turtle import *
+
+#get unmber of clovers you want to make
+def main():
+    clovers = int(input('How many clover leaves do you want?' ))
+    TCL(clovers)
+done()    
+
+#create clover function
+def TCL(clovers):
+    for i in range(1,clovers+1):
+        color('green')
+        begin_fill() 
+        left(0)
+        forward(180)
+        circle(-50,180)
+        left(100)
+        circle(-50,190)
+        forward(195)
+        setheading((360/clovers)*i)
+        #right(90)
+        end_fill()
+    
+done()
