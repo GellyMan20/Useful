@@ -1,0 +1,166 @@
+package Tests;
+import model.BoggleGame;
+import model.BoggleBoard;
+
+import static org.junit.Assert.*;
+import org.junit.Before;
+import org.junit.Test;
+
+/**
+ * BoggleGameTest - this class tests the Boggle game
+ * 
+ * @author Michael Norton
+ * @version PA01 (19 September 2016)
+ */
+public class BoggleGameTest
+{
+    private char[][] initialBoard;
+    private int initialRoundNumber;
+    private BoggleGame game;
+    
+    @Before
+    public void setup()
+    {
+        game = new BoggleGame();
+        initialRoundNumber = game.getRoundNumber();
+        initialBoard = getBoard();
+                
+    }
+
+    @Test
+    public void testGetBoard()
+    {
+        assertNotNull( "BoggleBoard object should not be null", game.getBoard() );
+    }
+
+    @Test
+    public void testGetDictionary()
+    {
+        assertNotNull( "Dictionary object should not be null", game.getDictionary() );
+    }
+    
+    @Test
+    public void testGetPlayer()
+    {
+        //assertNotNull( "BogglePlayer object should not be null", game.getPlayer() );
+    }
+    
+    @Test
+    public void testIntialState()
+    {
+        assertEquals("Starting round number should be 0", 0, initialRoundNumber );
+    }
+    
+    @Test
+    public void testPlayRound()
+    {
+        boolean isEqualBoard = true;
+        game.playRound();
+        
+        for ( int row = 0; row < 4 && isEqualBoard; row++ )
+            for ( int col = 0; col < 4 && isEqualBoard; col++ )
+                if ( initialBoard[ row ][ col ] != game.getBoard().getCell( row, col ) )
+                    isEqualBoard = false;
+        
+        assertTrue( "Round number should increment in playRound()", 
+                game.getRoundNumber() == initialRoundNumber + 1 );
+        assertFalse( "Board should be different after playRound()", isEqualBoard );
+
+    }
+
+    @Test
+    public void testDifficultyLevelValidLow()
+    {
+        assertEquals( "Difficulty Level should be 5 at start", 5, game.getDifficultyLevel() );
+        game.setDifficulty( 1 );
+        assertEquals( "Difficulty Level should be 1 after set", 1, game.getDifficultyLevel() );
+    }
+    
+
+    @Test
+    public void testDifficultyLevelValidHigh()
+    {
+        assertEquals( "Difficulty Level should be 5 at start", 5, game.getDifficultyLevel() );
+        game.setDifficulty( 10 );
+        assertEquals( "Difficulty Level should be 10 after set", 10, game.getDifficultyLevel() );
+    }
+
+    
+    @Test
+    public void testDifficultyLevelValidMid()
+    {
+        assertEquals( "Difficulty Level should be 5 at start", 5, game.getDifficultyLevel() );
+        game.setDifficulty( 4 );
+        assertEquals( "Difficulty Level should be 4 after set", 4, game.getDifficultyLevel() );
+    }
+
+    @Test
+    public void testDifficultyLevelTooLow()
+    {
+        assertEquals( "Difficulty Level should be 5 at start", 5, game.getDifficultyLevel() );
+        game.setDifficulty( 0 );
+        assertEquals( "Difficulty Level should be 5 after setting to 0", 5, game.getDifficultyLevel() );
+    }
+
+    @Test
+    public void testDifficultyLevelTooHigh()
+    {
+        assertEquals( "Difficulty Level should be 5 at start", 5, game.getDifficultyLevel() );
+        game.setDifficulty( 11 );
+        assertEquals( "Difficulty Level should be 5 after setting setting to 11", 5, game.getDifficultyLevel() );
+    }
+    
+    public void testPointsToWinLow()
+    {
+        assertEquals( "Points to Win should be 100 at start", 100, game.getPointsToWin() );
+        game.setPointsToWin( 10 );
+        assertEquals( "Points to Win should be 10 after set", 10, game.getPointsToWin() );
+        
+    }
+    
+    public void testPointsToWinHigh()
+    {
+        assertEquals( "Points to win should be 100 at start", 100, game.getPointsToWin() );
+        game.setPointsToWin( 10000 );
+        assertEquals( "Points to Win should be 10000 after set", 10000, game.getPointsToWin() );
+        
+    }
+    
+    public void testPointsToWinMid()
+    {
+        assertEquals( "Points to win should be 100 at start", 100, game.getPointsToWin() );
+        game.setPointsToWin( 5000 );
+        assertEquals( "Points to Win should be 5000 after set", 5000, game.getPointsToWin() );
+        
+    }
+    
+    public void testPointsToWinTooLow()
+    {
+        assertEquals( "Points to win should be 100 at start", 100, game.getPointsToWin() );
+        game.setPointsToWin( 0 );
+        assertEquals( "Points to Win should remain 100 after setting to 0", 100, game.getPointsToWin() );
+        
+    }
+   
+    public void testPointsToWinTooHigh()
+    {
+        assertEquals( "Points to win should be 100 at start", 100, game.getPointsToWin() );
+        game.setPointsToWin( 11000 );
+        assertEquals( "Points to Win should remain 100 after setting to 11000", 100, game.getPointsToWin() );
+        
+    }
+    private char[][] getBoard()
+    
+    {
+        char[][] board = new char[ 4 ][ 4 ];
+        BoggleBoard orgBoard = game.getBoard();
+        
+        for ( int row = 0; row < 4; row++ )
+            for ( int col = 0; col < 4; col++ )
+                board[row][col] = orgBoard.getCell( row, col );
+        
+        return board;
+    }
+    
+    
+}
