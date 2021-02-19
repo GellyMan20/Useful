@@ -1,0 +1,39 @@
+study(title="Toltecas Tendencies, Supports and Resistances", shorttitle="Toltecas TSR", overlay=true)
+
+hl = input(true, title="Show Triangles Indicators")
+tsr = input(true, title="Show Tendencies, Supports and Resistances")
+LRG_Channel_TF_mins_D_W_M = input('30')
+Range = input(1)
+
+SELL = security(tickerid, LRG_Channel_TF_mins_D_W_M, highest(Range))
+BUY = security(tickerid, LRG_Channel_TF_mins_D_W_M, lowest(Range))
+
+HI = plot(not tsr ? na : SELL, title='Red Line Resistance', color=SELL != SELL[1] ? na : red, linewidth=2)
+LO = plot(not tsr ? na : BUY, title='Green Line Support', color=BUY != BUY[1] ? na : green, linewidth=2)
+fill(HI, LO, color=#E3CAF1, transp=100)
+Hcon = high >= SELL
+Lcon = low <= BUY
+
+plotshape(not hl ? na : Hcon, title='Hcon', style=shape.triangledown, color=red, location=location.abovebar, size=size.auto)
+plotshape(not hl ? na : Lcon, title='Lcon', style=shape.triangleup, color=green, location=location.belowbar, size=size.auto)
+range = SELL - BUY
+
+SML_Channel_TF_mins_D_W_M = input('240')
+M_HIGH = security(tickerid, SML_Channel_TF_mins_D_W_M, high)
+M_LOW = security(tickerid, SML_Channel_TF_mins_D_W_M, low)
+plot(not tsr ? na : M_HIGH, title='M_HIGH', color=M_HIGH != M_HIGH[1] ? na : fuchsia, style=line, linewidth=2)
+plot(not tsr ? na : M_LOW, title='M_LOW', color=M_LOW != M_LOW[1] ? na : fuchsia, style=line, linewidth=2)
+
+ZigZag_length = input(6)
+hls = rma(hl2, ZigZag_length)
+isRising = hls >= hls[1]
+
+ShZigZag = input(false, title="ZigZag 1")
+lowest_1 = lowest(ZigZag_length)
+highest_1 = highest(ZigZag_length)
+ZigZag1 = isRising and not isRising[1] ? lowest_1 : not isRising and isRising[1] ? highest_1 : na
+plot(not ShZigZag ? na : ZigZag1, title='ZigZag1', color=black)
+
+ZigZag2 = input(false, title="ZigZag 2")
+ZigZag = Hcon ? high : Lcon ? low : na
+plot(not ZigZag2 ? na : ZigZag, title='ZigZag2', color=red, style=line, linewidth=3)

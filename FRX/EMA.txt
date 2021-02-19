@@ -1,0 +1,3 @@
+Length_EMA = input(200, minval=1)
+EMA = ema(close, Length_EMA)
+plot(EMA, color=color.yellow, linewidth=3, title="EMA")

@@ -1,0 +1,28 @@
+//==============================================================================================
+//Bollinger Bands
+//Inputs
+length = input(20, minval=1)
+src = input(close, title="Source")
+mult1 = input(2.0, minval=0.001, maxval=50, title="StdDev1")
+mult2 = input(3.0, minval=0.001, maxval=50, title="StdDev2")
+
+//Parameter Setting
+mdl = sma(close, length) // 20 trading days simple moving average
+dev = stdev(close, length) // 20 trading days standard deviation
+
+upr1 = mdl + mult1*dev // upper_band 20 trading days moving average plus 2 standard deviation
+upr2 = mdl + mult2*dev // upper_band 20 trading days moving average plus 2 standard deviation
+
+lwr1 = mdl - mult1*dev // lower_band 20 trading days moving average minus 2 standard deviation
+lwr2 = mdl - mult2*dev // lower_band 20 trading days moving average minus 2 standard deviation
+
+//Plot
+plot(mdl, color = color.white, linewidth = 3) //Plot 20 days simple moving average on the chart
+p1 = plot(upr1, color = color.red) //Plot upper_band
+p2 = plot(upr2, color = color.red) //Plot upper_band
+p3 = plot(lwr1, color = color.blue) //Plot lower_band
+p4 = plot(lwr2, color = color.blue) //Plot lower_band
+
+//Fill
+fill(p1,p2, color=color.red)
+fill(p3,p4, color=color.blue)

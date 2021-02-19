@@ -1,0 +1,11 @@
+MA_Jaw = input(13, title="MA_Jaw")
+MA_Teeth = input(8, title="MA_Teeth")
+MA_Lips = input(5, title="MA_Lips")
+
+MA_L = sma(close, MA_Jaw)
+MA_M = sma(close, MA_Teeth)
+MA_S = sma(close, MA_Lips)
+
+plot(MA_L, color=#2196F3, linewidth=2)
+plot(MA_M, color=#FF5252, linewidth=2)
+plot(MA_S, color=#4CAF50, linewidth=2)
