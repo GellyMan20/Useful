@@ -1,6 +1,0 @@
-//@version=3
-study(title="50/100/200 Moving Averages", shorttitle="MA", overlay=true, linktoseries=true)
-
-plot(sma(close, 50), title="50 SMA", color=#00DB00, linewidth=1, transp=0)
-plot(sma(close, 100), title="100 SMA", color=#FC8A10, linewidth=1, transp=0)
-plot(sma(close, 200), title="200 SMA", color=#FEDA15, linewidth=1, transp=0)
