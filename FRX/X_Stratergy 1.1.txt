@@ -1,0 +1,112 @@
+study(title="X_Strategy 1.1", shorttitle="X_Strat", overlay=true)
+
+//====================================================================================================================
+//===============================     Toltecas Tendencies, Supports and Resistances     ==============================
+//====================================================================================================================
+//Notes---------------------------------------------------------------------------------------------------------------
+//Triangles indicators for confirmations buy/sell.
+//
+//Use for binaries (1M-3M-5M)
+//- LRG_Channel_TF_mins_D_W_M = 30
+//- Range = 1
+//- SML_Channel_TF_mins_D_W_M = 240
+//
+//Use for forex/cryptocurrencies/indices (15M-1H-4H)
+//- LRG_Channel_TF_mins_D_W_M = D
+//- Range = 1
+//- SML_Channel_TF_mins_D_W_M = W
+//End Notes----------------------------------------------------------------------------------------------------------
+
+hl = input(true, title="Show Triangles Indicators")
+tsr = input(true, title="Show Tendencies, Supports and Resistances")
+LRG_Channel_TF_mins_D_W_M = input('20')
+Range = input(1)
+
+SELL = security(tickerid, LRG_Channel_TF_mins_D_W_M, highest(Range))
+BUY = security(tickerid, LRG_Channel_TF_mins_D_W_M, lowest(Range))
+
+HI = plot(not tsr ? na : SELL, title='Red Line Resistance', color=SELL != SELL[1] ? na : red, linewidth=2)
+LO = plot(not tsr ? na : BUY, title='Green Line Support', color=BUY != BUY[1] ? na : green, linewidth=2)
+fill(HI, LO, color=#E3CAF1, transp=100)
+Hcon = high >= SELL
+Lcon = low <= BUY
+
+plotshape(not hl ? na : Hcon, title='Hcon', style=shape.triangledown, color=red, location=location.abovebar, size=size.auto)
+plotshape(not hl ? na : Lcon, title='Lcon', style=shape.triangleup, color=green, location=location.belowbar, size=size.auto)
+range = SELL - BUY
+
+//-------------------------------------------------------------------------------------------------------------------
+//Purple resistance and support
+SML_Channel_TF_mins_D_W_M = input('240')
+M_HIGH = security(tickerid, SML_Channel_TF_mins_D_W_M, high)
+M_LOW = security(tickerid, SML_Channel_TF_mins_D_W_M, low)
+plot(not tsr ? na : M_HIGH, title='M_HIGH', color=M_HIGH != M_HIGH[1] ? na : fuchsia, style=line, linewidth=2)
+plot(not tsr ? na : M_LOW, title='M_LOW', color=M_LOW != M_LOW[1] ? na : fuchsia, style=line, linewidth=2)
+
+//-------------------------------------------------------------------------------------------------------------------
+//Zig-Zag lines (connect everything-not really used by me)
+ZigZag_length = input(6)
+hls = rma(hl2, ZigZag_length)
+isRising = hls >= hls[1]
+
+ShZigZag = input(false, title="ZigZag 1")
+lowest_1 = lowest(ZigZag_length)
+highest_1 = highest(ZigZag_length)
+ZigZag1 = isRising and not isRising[1] ? lowest_1 : not isRising and isRising[1] ? highest_1 : na
+plot(not ShZigZag ? na : ZigZag1, title='ZigZag1', color=black)
+
+ZigZag2 = input(false, title="ZigZag 2")
+ZigZag = Hcon ? high : Lcon ? low : na
+plot(not ZigZag2 ? na : ZigZag, title='ZigZag2', color=red, style=line, linewidth=3)
+
+//====================================================================================================================
+//========================================     Bollinger Bands     ===================================================
+//====================================================================================================================
+//Inputs
+length = input(20, minval=1, title="BB_Length")
+src = input(close, title="Source")
+mult1 = input(2.0, minval=0.001, maxval=50, title="StdDev1")
+mult2 = input(3.0, minval=0.001, maxval=50, title="StdDev2")
+
+//Parameter Setting
+mdl = sma(close, length) // 20 trading days simple moving average
+dev = stdev(close, length) // 20 trading days standard deviation
+
+upr1 = mdl + mult1*dev // upper_band 20 trading days moving average plus 2 standard deviation
+upr2 = mdl + mult2*dev // upper_band 20 trading days moving average plus 2 standard deviation
+
+lwr1 = mdl - mult1*dev // lower_band 20 trading days moving average minus 2 standard deviation
+lwr2 = mdl - mult2*dev // lower_band 20 trading days moving average minus 2 standard deviation
+
+//Plot
+plot(mdl, color = white, linewidth = 3) //Plot 20 days simple moving average on the chart
+p1 = plot(upr1, color = red, title = "Upper_2nd_SDev") //Plot upper_band
+p2 = plot(upr2, color = red, title = "Upper_3rd_SDev") //Plot upper_band
+p3 = plot(lwr1, color = green, title = "Lower_2nd_SDev") //Plot lower_band
+p4 = plot(lwr2, color = green, title = "Lower_3rd_SDev") //Plot lower_band
+
+//Fill
+fill(p1,p2, color=red, title = "BB_Upper")
+fill(p3,p4, color=green, title = "BB_Lower")
+
+//====================================================================================================================
+//=========================================     Alligator SMA     ====================================================
+//====================================================================================================================
+MA_Jaw = input(13, title="MA_Jaw")
+MA_Teeth = input(8, title="MA_Teeth")
+MA_Lips = input(5, title="MA_Lips")
+
+MA_L = sma(close, MA_Jaw)
+MA_M = sma(close, MA_Teeth)
+MA_S = sma(close, MA_Lips)
+
+plot(MA_L, color=blue, linewidth=2, title="MA_Jaw")
+plot(MA_M, color=red, linewidth=2, title="MA_Teeth")
+plot(MA_S, color=green, linewidth=2,  title="MA_Lips")
+
+//====================================================================================================================
+//==============================================     EMA     =========================================================
+//====================================================================================================================
+Length_EMA = input(200, minval=1)
+EMA = ema(close, Length_EMA)
+plot(EMA, color=yellow, linewidth=3, title="EMA")
